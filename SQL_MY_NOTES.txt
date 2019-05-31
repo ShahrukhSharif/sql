@@ -1,0 +1,329 @@
+#---------------------------  SQL MY NOTES  --------------------------
+
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     SECTION ---  A (HOW TO RETRIVE DATA FROM DATABASE)   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+################################################################################################################################
+1. BASICS Sql Query
+
+SELECT col1,col2
+FROM table
+WHERE col1='something'
+
+
+#################################################################################################################################
+2. USE OF AND and OR
+
+AND ---  Columns we will apply Condition Must Be True(We will use This Concept For Multiple Columns)
+OR ---   In One Column Either this Condition is true or This Condition is True.
+
+SELECT col1,col2
+FROM table
+WHERE col1='value1'
+AND col2='value2'
+
+SELECT col1,col2
+FROM table
+WHERE col1='value1'
+OR col1='Value2'
+
+#Important point (Always combine OR Condintion in the clause)
+
+SELECT col1,col2
+FROM table
+WHERE (col1='value1'
+OR col1='Value2')
+AND col2='Value3'
+
+#How To Interpret This Query In English
+
+From Table (COnDITION1=IN THIS Column First or Second Either one you select) AND (CONDITION2) Must Be true AND Return COl1 And COl2.
+
+
+#####################################################################################################################################
+
+3. SOME SPECIAL CLAUSE
+
+A. IN CLAUSE ----    ALTERNATIVE of OR 
+
+SELECT col1,col2
+FROM table
+WHERE col IN ('value1','value2')
+
+B. BETWEEN ClAUSE ----  WHEN WE WIll Talk About Range (INCLUSIVE Operator)
+SELECT col1,col2
+FROM table
+WHERE col1 BETWEEN 100 AND 200
+
+C. is NULL or is NOT NULL
+SELECT col1,col2
+FORM table
+WHERE col1 is not null
+
+D. LIKE OPERTOR
+SELECT col1,col2
+FROM table
+WHERE col1 like 'S%'
+
+
+4. To Make Report More Beautiful
+
+A. Aliasing ---  TO Change The Name OF Columns
+SELECT col as 'NAME WE WILL GIVE'
+FROM table
+
+B. CONCATE ---  TO Combine Content of two Columns
+SELECT concat(lower(column1),upper(column))
+FROM table
+
+C. ORDER BY ---  To Sort table By Particular Columns
+SELECT col1
+FROM table
+ORDER BY col1
+
+
+SELECT col1
+FROM table
+ORDER BY col1 DESC
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     SECTION ---  B (Single Row Functions )    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+(Don't  Try  to  Memorise it  use this  notes  and  do  calculations)   ---  concat,substr we will use genreally
+
+#####################################################################################################################################################
+
+
+Resource ---  https://www.techonthenet.com/oracle/functions/index.php
+
+1. Character Based Row Functions
+
+A. upper -- To  change content in upper case.
+B. lower -- To change content in lower case.
+
+SELECT upper(colname1)
+FROM table
+
+SELECT lower(colname1)
+FROM table
+
+C. concat -- To concat Two Things.
+
+SELECT concat(upper(colname1),lower(colname1))
+FROM table
+
+
+d. initcap('my name is shahrukh')  ---   MY Name Is Shahrukh
+
+e. LENGTH('shahrukh')  ---  8
+
+f. SUBSTR('shahrukh',2,3)   --- hah
+
+g. LPAD('DAY',6,$)  ---   $$$DAY
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Numeric And Date Type Single Row Functions
+
+A. Round ---  Round a particular Number after decimal Point
+round(100.987,2)  ---  100.99
+
+B. Trunc ---  remove a number after decimal point
+trunc(100.987,2)  ---  100.98
+
+C. sysdate --- display operating system date
+SELECT sysdate
+FROM dual
+
+D. systimestamp ---  display whole time of our system
+SELECT systimestamp
+FROM dual
+
+E. add_months --- display date after add certain Month
+SELECT add_months(date,Number_OF_month)
+FROM dual
+
+F. months_between --- Display Number between two dates
+SELECT months_between(dateA,DateB)
+FROM dual
+
+G. Trunc  ---  Display Particular date With like {11/30/2011,'Month'} --->>> 11/01/2011
+SELECT Trunc(date,'Month')
+FROM dual
+
+
+3. Formatting With date And Numbers
+
+A.  to_char --- Used to convert Date And Numbers into String format
+SELECT to_char(sysdate,'Months DD,YYYY')
+FROM dual
+
+SELECT to_char(123,'$999.99')
+FROM dual
+
+B. to_date ---   Convert  string to date
+
+SELECT to_date('str',formate)
+FROM dual
+
+SELECT to_date('2012-09-30','dd/mm/yyyy')
+from dual
+
+
+4. NULL Functions
+
+A. NVL  Function ---  Change geneallraly Null value to some Particular Value.
+
+SELECT NVL(comm,0)
+FROM emp
+
+
+SELECT NVL(to_char(comm),'data Not Found')
+FROM emp
+
+B. NULLIF Function ---  if both value is same then return null   (  nullif(arg1,arg2)   )
+
+SELECT nullif(length(ename),5)
+FROM emp
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     SECTION ---  C (Multi  Row Functions )    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+#####################################################################################################################################################
+
+1. Grouping Functions--
+
+max(),min(),count(),avg()
+
+
+2. Groupby Function (PowerFull Concept)
+
+///--- sql Business basics Struture
+
+SELECT 
+FROM 
+WHERE
+GROUP BY COL1
+HAVING max(col1)>200
+ORDER BY col1
+
+SELECT JOB,count(JOB)
+FROM emp
+GROUP BY JOB
+HAVING max(sal)>200
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     SECTION ---  D (JOINS Parts For interview Most Important )    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+(Don't  Try  to  Memorise it  use this  notes  and  do  calculations)
+
+
+#####################################################################################################################################################
+
+1. Subqueries in Sql
+
+
+A. SELECT Clause
+
+SELECT JOB, 'Hello' , (SELECT job FROM emp WHERE JOB like '%Pre%')
+FROM EMP
+
+B. FROM Clause
+
+SELECT JOB
+FROM (SELECT * FROM EMP)
+
+C. WHERE CLAUSE  ---  
+
+---FOR One Condition Statisfied
+SELECT JOB 
+FROM EMP
+WHERE JOB = (SELECT JOB FROM DEPT WHERE deptno = 30)
+
+
+--FOR More than one condition Statisfied
+
+SELECT JOB
+FROM emp
+WHERE JOB IN (SELECT JOB in DEPT WHERE JOB IN ('CLERK','PRESIDENT'))
+
+
+
+2. Joins In SQL
+
+TWO WAYS TO SHOW YOUR STYLE. I Will Prefer Second One
+
+SELECT *
+FROM (SELECT * FROM EMP WHERE JOB IN ('MANAGER','PRESIDENT')) e, dept
+WHERE e.deptno = dept.deptno
+
+
+{------------   This Is Very Important
+SELECT *
+FROM emp, dept
+WHERE e.deptno = dept.deptno
+AND (ename IN ('MANAGER','PRESIDENT'))
+AND loc='dallas'
+------------------------  }
+
+
+3. INNER AND OUTER JOINS
+
+SELECT *
+FROM emp INNER JOIN dept
+ON emp.deptno = dept.deptno
+
+SELECT *
+FROM emp RIGHT JOIN dept
+ON emp.deptno = dept.deptno
+
+SELECT *
+FROM emp LEFT JOIN dept
+ON emp.deptno = dept.deptno
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     SECTION ---  E ( CREATING, ALTERING AND UPDATING )    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+#####################################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
