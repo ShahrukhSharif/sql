@@ -1,0 +1,107 @@
+# Ideal Merchandising Journey ---
+
+
+
+SELECT top 10 oboi.sellerProductId, oboi.Quantity, oboi.facilityid, oboi.CreatedOnUtc,fp.ProductId,s.SKU, s.Name, s.MRP, s.Id,nx.Value size,npvc.AttributeValue Category ,npvc1.AttributeValue Occasion,npvc2.AttributeValue material, npvc4.AttributeValue patternType, npvc5.AttributeValue lengths FROM [dbo].[OutboundOrderItem] oboi
+LEFT outer JOIN    [dbo].[FacilityProduct]  fp                  ON    fp.id  = oboi.sellerProductId 
+LEFT outer JOIN    [dbo].[SKUBase] s                            ON    fp.ProductId  = s.id 
+LEFT outer JOIN    [dbo].[NewProductVariation] nx               ON    s.id = nx.ProductId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc   ON   npvc.articleattributeId='11'   and s.Id = npvc.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc1  ON   npvc1.articleattributeId='12'  and s.Id = npvc1.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc2  ON   npvc2.articleattributeId='13'  and s.Id = npvc2.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc4  ON   npvc4.articleattributeId='15'  and s.Id = npvc4.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc5  ON   npvc5.articleattributeId='16'  and s.Id = npvc5.skubaseId
+
+
+
+
+
+
+
+
+
+
+SELECT top 10000 [dbo].[OutboundOrderItem].[sellerProductId],[dbo].[OutboundOrderItem].Quantity,[dbo].[OutboundOrderItem].facilityid,[dbo].[FacilityProduct].[ProductId], [dbo].[SKUBase].SKU,[dbo].[SKUBase].Name,[dbo].[SKUBase].MRP,[dbo].[OutboundOrderItem].CreatedOnUtc,[dbo].[NewProductVariation].Value size, [dbo].[SKUBase].Id,npvc.AttributeValue Category  ,npvc1.AttributeValue Occasion,npvc2.AttributeValue material, npvc4.AttributeValue patternType, npvc5.AttributeValue lengths
+FROM [dbo].[OutboundOrderItem]
+LEFT JOIN [dbo].[FacilityProduct]
+ON  [dbo].[OutboundOrderItem].sellerProductId =  [dbo].[FacilityProduct].id
+LEFT JOIN  [dbo].[SKUBase]
+ON  [dbo].[SKUBase].id =  [dbo].[FacilityProduct].[ProductId]
+LEFT JOIN  [dbo].[NewProductVariation]
+ON  [dbo].[SKUBase].id = [dbo].[NewProductVariation].[ProductId]
+Left Outer Join [dbo].[SKUArticleAttributesToSKUBase] npvc
+ON  npvc.articleattributeId='11' and npvc.skubaseId=[dbo].[SKUBase].Id
+Left Outer Join [dbo].[SKUArticleAttributesToSKUBase] npvc1
+ON  npvc1.articleattributeId='12' and npvc1.skubaseId=[dbo].[SKUBase].Id
+Left Outer Join [dbo].[SKUArticleAttributesToSKUBase] npvc2 
+ON  npvc2.articleattributeId='13' and npvc2.skubaseId=[dbo].[SKUBase].Id
+Left Outer Join [dbo].[SKUArticleAttributesToSKUBase] npvc4 
+ON  npvc4.articleattributeId='15' and npvc4.skubaseId=[dbo].[SKUBase].Id
+Left Outer Join [dbo].[SKUArticleAttributesToSKUBase] npvc5 
+ON  npvc5.articleattributeId='16' and npvc5.skubaseId=[dbo].[SKUBase].Id
+
+
+
+
+select * from [dbo].[NewProductVariation]
+
+
+
+
+select distinct npvs.Value
+from [dbo].[NewProductVariation] npvs
+
+
+
+
+select distinct npvs.Value
+from [dbo].[NewProductVariation] npvs
+Where npvs.AttributeName = 'Color'
+
+
+
+
+
+SELECT oboi.sellerProductId, oboi.Quantity, oboi.facilityid, oboi.CreatedOnUtc,fp.ProductId,
+		s.SKU, s.Name, s.MRP, s.Id,
+		nx.Value Color,
+		nx1.Value Size,
+		npvc.AttributeValue Category ,
+		npvc1.AttributeValue Occasion,
+		npvc2.AttributeValue material, 
+		npvc4.AttributeValue patternType,
+		npvc5.AttributeValue lengths 
+FROM [dbo].[OutboundOrderItem] oboi
+LEFT outer JOIN    [dbo].[FacilityProduct]  fp                  ON   fp.id  = oboi.sellerProductId 
+LEFT outer JOIN    [dbo].[SKUBase] s                            ON   fp.ProductId  = s.id 
+LEFT outer JOIN    [dbo].[NewProductVariation] nx               ON   nx.AttributeId = '1'           and   s.id = nx.ProductId 
+LEFT outer JOIN    [dbo].[NewProductVariation] nx1              ON   nx1.AttributeId = '2'          and   s.id = nx1.ProductId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc   ON   npvc.articleattributeId='11'   and  s.Id = npvc.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc1  ON   npvc1.articleattributeId='12'  and  s.Id = npvc1.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc2  ON   npvc2.articleattributeId='13'  and  s.Id = npvc2.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc4  ON   npvc4.articleattributeId='15'  and  s.Id = npvc4.skubaseId
+Left Outer Join    [dbo].[SKUArticleAttributesToSKUBase] npvc5  ON   npvc5.articleattributeId='16'  and  s.Id = npvc5.skubaseId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
