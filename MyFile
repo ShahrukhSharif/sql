@@ -1,0 +1,27 @@
+// How To Make Statstics Analysis
+
+
+
+select z.FacilityId,z.Size,z.Color,z.mf,sum(z.OrderQuantity) sold_qty
+from 
+(select e.OrderQuantity,e.FacilityId,e.Size,e.Color,"mf"= 
+ CASE WHEN e.MRP > 0 AND e.MRP <= 800 THEN '0-800 rs'
+ WHEN e.MRP > 800 AND e.MRP <= 1600 THEN '800-1600 rs'
+ WHEN e.MRP > 1600 AND e.MRP <= 2400 THEN '1600-2400 rs'
+ WHEN e.MRP > 2400 AND e.MRP <= 3200 THEN '2400-3200 rs'
+ WHEN e.MRP > 3200 AND e.MRP <= 4000 THEN '3200-4000 rs'
+ ELSE 'more then 4000 rs'
+ end 
+from
+(SELECT   poi.OrderQuantity,poi.FacilityId,
+				s.MRP,
+				npv.Value Size,
+				npv1.Value Color
+
+FROM [dbo].[POSOrderItem] poi
+Left Outer Join [dbo].[FacilityProduct] fp        on poi.facilityProductId = fp.Id
+Left Outer join [dbo].[SKUBase] s                 on fp.ProductId = s.id
+Left Outer join [dbo].[NewProductVariation] npv   on s.id = npv.ProductId and npv.AttributeName='Size'
+Left Outer join [dbo].[NewProductVariation] npv1  on s.id = npv1.ProductId and npv1.AttributeName='Color'
+where s.MRP>100 and npv.Value  is not null) e ) z
+group by z.FacilityId, z.Size,z.Color,z.mf
