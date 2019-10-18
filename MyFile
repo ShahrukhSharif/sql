@@ -25,3 +25,82 @@ Left Outer join [dbo].[NewProductVariation] npv   on s.id = npv.ProductId and np
 Left Outer join [dbo].[NewProductVariation] npv1  on s.id = npv1.ProductId and npv1.AttributeName='Color'
 where s.MRP>100 and npv.Value  is not null) e ) z
 group by z.FacilityId, z.Size,z.Color,z.mf
+
+
+select s.FacilityId,s.OrderQuantity Total_qty,s.CreatedOnUtc,s.facilityProductId,s.SellingPrice,s.AvailableQuantity from
+(SELECT   poi.OrderQuantity,poi.FacilityId,(poi.OrderQuantity-ISNULL(poi.ReturnQuantity, 0 )) as filter,poi.CreatedOnUtc,poi.facilityProductId,poi.SellingPrice,fp.AvailableQuantity
+FROM [dbo].[POSOrderItem] poi
+Left Outer Join [dbo].[FacilityProduct] fp        on poi.facilityProductId = fp.Id
+where poi.CreatedOnUtc>='2019-01-01' ) s
+where s.filter>0 and s.AvailableQuantity>=0
+
+
+
+
+
+select x.customerId,x.LastPurchase,x.TotalAmount,x.TotalVisited,x.days,last_visted.Name from 
+(SELECT   z.customerId,MAX(z.CreatedOnUtc) LastPurchase,sum(z.sellingPrice) TotalAmount,count(z.customerId) TotalVisited,DATEDIFF(DAY,MAX(z.CreatedOnUtc),(select GETDATE())) days
+ from
+(
+SELECT   po.customerId,poi.CreatedOnUtc,poi.sellingPrice
+FROM [dbo].[POSOrderItem] poi
+left outer join [dbo].[POSOrder] po                    on po.id = poi.posOrderId
+left outer  join [dbo].[customer] c                     on c.id = po.customerId
+Left Outer Join [dbo].[FacilityProduct] fp        on poi.facilityProductId = fp.Id
+Left outer join  [dbo].Facility f                    on fp.facilityId = f.id
+Left Outer join [dbo].[SKUBase] s                 on fp.ProductId = s.id
+where poi.CreatedOnUtc >= '2019-01-01' and f.Type='3'
+and s.sku!='UTSB16001-NA' and s.sku!='UTSB18001-NA' and po.OrderStatusId=1) z
+GROUP BY z.customerId
+) x 
+inner join
+(select f.Name,c.id from posorder ord
+inner join facility f on f.id=ord.FacilityId
+inner join Customer c on c.id=ord.customerId
+inner join (select customerId,MAX(id) orderid from POSOrder where OrderStatusId=1 group by customerId) abc on abc.orderid=ord.Id) last_visted  on last_visted.id = x.customerId
+
+
+
+Rfm -
+
+SELECT   z.customerId,MAX(z.CreatedOnUtc) LastPurchase,sum(z.sellingPrice) TotalAmount,count(z.customerId) TotalVisited,DATEDIFF(DAY,MAX(z.CreatedOnUtc),(select GETDATE())) days
+ from
+(
+SELECT   po.customerId,poi.CreatedOnUtc,poi.sellingPrice
+FROM [dbo].[POSOrderItem] poi
+left outer join [dbo].[POSOrder] po                    on po.id = poi.posOrderId
+left outer  join [dbo].[customer] c                     on c.id = po.customerId
+Left Outer Join [dbo].[FacilityProduct] fp        on poi.facilityProductId = fp.Id
+Left outer join  [dbo].Facility f                    on fp.facilityId = f.id
+Left Outer join [dbo].[SKUBase] s                 on fp.ProductId = s.id
+where poi.CreatedOnUtc >= '2019-01-01' and f.Type='3'
+and s.sku!='UTSB16001-NA' and s.sku!='UTSB18001-NA') z
+GROUP BY z.customerId
+
+
+
+
+select m.customerId,m.LastPurchase,m.TotalAmount,m.TotalVisited,m.days,
+NTILE(3) OVER (ORDER BY  m.TotalAmount) Amount_Spending_Score,
+NTILE(3) OVER (ORDER BY m.TotalVisited ) Visited_Score,
+NTILE(3) OVER (ORDER BY  m.days ) days_score
+from 
+(
+SELECT   z.customerId,MAX(z.CreatedOnUtc) LastPurchase,sum(z.sellingPrice) TotalAmount,count(z.customerId) TotalVisited,DATEDIFF(DAY,MAX(z.CreatedOnUtc),(select GETDATE())) days
+ from
+(
+SELECT   po.customerId,poi.CreatedOnUtc,poi.sellingPrice
+FROM [dbo].[POSOrderItem] poi
+inner join [dbo].[POSOrder] po                    on po.id = poi.posOrderId
+inner join [dbo].[customer] c                     on c.id = po.customerId
+where poi.CreatedOnUtc >= '2019-01-01') z
+GROUP BY z.customerId
+) m
+Order By m.customerId
+
+
+
+
+
+
+
